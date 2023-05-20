@@ -10,7 +10,12 @@
     "multer": "^1.4.5-lts.1",
     "pdf-parse": "^1.1.1",
     "pdf2json": "^2.0.2",
+    "pdfkit": "^0.13.0",
+    "pdfkit-table": "^0.1.99",
+    "pdfmake": "^0.3.0-beta.5",
     "pdfmake-to-excel": "^1.1.57",
+    "pdfmake-unicode": "^0.0.1",
+    "roboto-font": "^0.1.0",
     "serve-static": "^1.15.0"
   },
   "type": "module"
