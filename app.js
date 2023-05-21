@@ -199,7 +199,7 @@ async function analysisData(path) {
             부채비율: (부채비율 * 100).toFixed(2),
             자기자본이익률: (ROE * 100).toFixed(2)
         }
-        let question = result + "\n이 데이터는 회사의 재무제표증명서를 요약한 데이터야\n이 데이터를 바탕으로 이 회사의 현재 상태를 재무제표평가적으로 분석해 요약해줘"
+        let question = result + "\n이 데이터는 회사의 재무제표증명서를 요약한 데이터야\n이 데이터를 바탕으로 이 회사의 현재 상태를 재무제표평가적으로 최대한 자세히 분석해줘"
         let q = new wrtn()
         await q.loginByEmail("39siw7sm29@naver.com", "39siw7sm29!")
         let roomId = await q.addRoom()
@@ -299,8 +299,12 @@ app.post('/makePdf1', async (req, res) => {
         debtRatio: numberToKorean(Number(pdf1.resultJson['부채비율']))+'%',
         ROE: numberToKorean(Number(pdf1.resultJson['자기자본이익률']))+'%',
     };
+    let createlaboratory = ''
+    createlaboratory += "당사의 당기순이익 "+numberToKorean(Number(pdf1.resultJson['장기차입금']))+'원'+"의 추정 납부 세금은 "+numberToKorean(Number(pdf1.resultJson['세금']))+'원'+"이라고 가정한다.\n"
+    createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,\n연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.\n${numberToKorean(Number(pdf1.resultJson['세금']))} - 17,500,000원 = ${Number(pdf1.resultJson['세금']) - 17500000 < 0 ? 35000 : Number(pdf1.resultJson['세금']) - 17500000}원이다.`
+
     const table = {
-        headers: ['항목', '금액'],
+        headers: ['항목', ''],
         rows: [
             ['장기차입금', reportData.loanAmount],
             ['매출액', reportData.sales],
@@ -336,11 +340,27 @@ app.post('/makePdf1', async (req, res) => {
             {
                 text: pdf1['AI']
             },
+            {
+                text: '[ 연구소 설립시 혜택 ]',
+                style: 'header'
+            },
+            {
+                text: createlaboratory
+            },
+            {
+                text: '[ 예상 대출액 평가 ]',
+                style: 'header'
+            },
+            {
+                text: pdf1['대출예상']
+            },
+            {
+                text: pdf1['대출예상액']
+            },
         ],
         styles: {
             header: {
                 fontSize: 24,
-                bold: true,
                 alignment: 'center',
             },
         },
