@@ -499,15 +499,30 @@
                                 const result2_ = document.getElementById('result4');
                                 result2_.innerHTML = "[ AI 분석결과 ]<br/>"+responseJson_["AI"].replace(/\n/g, '<br/>');
                                 if(responseJson_.resultJson.부채비율 >= 50) {
-                                    result1_.innerHTML += "<br/>대출 가능여부 : 불가능";
+                                    result1_.innerHTML += "<br/><br/>[ 예상 대출액 평가 ] <br/>대출 가능여부 : 불가능";
+                                    responseJson_["대출예상"] = "대출 가능여부 : 불가능"
+                                    responseJson_["대출예상액"] = ""
                                 } else {
                                     const decreasePercentage = ((responseJson.resultJson.자본총액 - responseJson_.resultJson.자본총액) / responseJson.resultJson.자본총액) * 100;
                                     if (decreasePercentage > 0) {
-                                        result1_.innerHTML += "<br/>대출 가능여부 : 불가능";
+                                        result1_.innerHTML += "<br/><br/>[ 예상 대출액 평가 ] <br/>대출 가능여부 : 불가능";
+                                        responseJson_["대출예상"] = "대출 가능여부 : 불가능"
+                                        responseJson_["대출예상액"] = ""
                                     } else {
-                                        result1_.innerHTML += "<br/>대출 가능여부 : 가능여부 상급자 체크 ";
+                                        let n = (Number(responseJson_.resultJson['매출액'])*0.4)-Number(responseJson_.resultJson['장기차입금'])
+                                        if(n > 300000000) n = 300000000;
+                                        result1_.innerHTML += "<br/><br/>[ 예상 대출액 평가 ] <br/>대출 가능여부 : 가능<br/>예상 대출액 : "+numberToKorean(n)+'원';
+                                        responseJson_["대출예상"] = "대출 가능여부 : 가능"
+                                        responseJson_["대출예상액"] = "예상 대출액 : "+numberToKorean(n)+'원'
                                     }
                                 }
+                                responseJson_.name = input2.files[0].name;
+                                responseJson.name = input.files[0].name;
+                                let createlaboratory = '<br/><br/>[ 연구소 설립시 혜택]<br/>'
+                                let pdf2 = responseJson_
+                                createlaboratory += "당사의 당기순이익 "+numberToKorean(Number(pdf2.resultJson['장기차입금']))+'원'+"의 추정 납부 세금은 "+numberToKorean(Number(pdf2.resultJson['세금']))+'원'+"이라고 가정한다.<br/>"
+                                createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,<br/>연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.<br/>${numberToKorean(Number(pdf2.resultJson['세금']))} - 17,500,000원 = ${Number(pdf2.resultJson['세금']) - 17500000 < 0 ? 35000 : Number(pdf2.resultJson['세금']) - 17500000}원이다.`
+                                result1_.innerHTML += createlaboratory
                                 result2_.innerHTML += "<br/><br/>[ 일반 비교결과 ]<br/>"+input.files[0].name+"대비 "+input2.files[0].name+"의 비교결과입니다.<br/>";
                                 let v1 = responseJson.resultJson;
                                 let v2 = responseJson_.resultJson;
