@@ -36,8 +36,13 @@ function extractValuesWithSubstring(arr, substring) {
                 let ext = arr[i + 2]['']
                 values.push(ext);
             } else {
-                let ext = obj[''].slice(obj[''].indexOf(substring) + substring.length + 2, obj[''].length).trim();
-                values.push(ext);
+                if(type == 2) {
+                    let ext = obj[''].slice(obj[''].indexOf(substring) + substring.length, obj[''].length).trim();
+                    values.push(ext);
+                } else {
+                    let ext = obj[''].slice(obj[''].indexOf(substring) + substring.length + 2, obj[''].length).trim();
+                    values.push(ext);
+                }
             }
         }
     }
@@ -72,54 +77,81 @@ function extractTableData(pdfText) {
     return tableData;
 }
 
-function 과세표준계산(값) {
-    if (값 <= 12000000) {
-        return {
-            누진세액공제: 0,
-            세율: 6
-        };
-    }
-    if (값 > 12000000 && 값 <= 46000000) {
-        return {
-            누진세액공제: 1080000,
-            세율: 15
-        };
-    }
-    if (값 > 46000000 && 값 <= 88000000) {
-        return {
-            누진세액공제: 5220000,
-            세율: 24
-        };
-    }
-    if (값 > 88000000 && 값 <= 150000000) {
-        return {
-            누진세액공제: 14900000,
-            세율: 35
-        };
-    }
-    if (값 > 150000000 && 값 <= 300000000) {
-        return {
-            누진세액공제: 19400000,
-            세율: 38
-        };
-    }
-    if (값 > 300000000 && 값 <= 500000000) {
-        return {
-            누진세액공제: 25900000,
-            세율: 40
-        };
-    }
-    if (값 > 500000000 && 값 <= 1000000000) {
-        return {
-            누진세액공제: 49900000,
-            세율: 42
-        };
-    }
-    if (값 > 1000000000) {
-        return {
-            누진세액공제: 129900000,
-            세율: 45
-        };
+function 과세표준계산(값,법인) {
+    if(법인 == true) {
+        if(값 <= 200000000) {
+            return {
+                세율:9,
+                누진세액공제:0
+            }
+        }
+        if(값 > 200000000 && 값 <= 20000000000) {
+            return {
+                세율:19,
+                누진세액공제:0
+            }
+        }
+        if(값 > 20000000000 && 값 <= 300000000000) {
+            return {
+                세율:21,
+                누진세액공제:0
+            }
+        }
+        if(값 > 300000000000) {
+            return {
+                세율:24,
+                누진세액공제:0
+            }
+        }
+    } else {
+        if(값 <= 14000000) {
+            return {
+                세율:6,
+                누진세액공제:0
+            }
+        }
+        if(값 > 14000000 && 값 <= 50000000) {
+            return {
+                세율:15,
+                누진세액공제:1260000
+            }
+        }
+        if(값 > 50000000 && 값 <= 88000000) {
+            return {
+                세율:24,
+                누진세액공제:5760000
+            }
+        }
+        if(값 > 88000000 && 값 <= 150000000) {
+            return {
+                세율:35,
+                누진세액공제:15440000
+            }
+        }
+        if(값 > 150000000 && 값 <= 300000000) {
+            return {
+                세율:38,
+                누진세액공제:19940000
+            }
+        }
+        if(값 > 300000000 && 값 <= 500000000) {
+            return {
+                세율:40,
+                누진세액공제:25940000
+            }
+        }
+        if(값 > 500000000 && 값 <= 1000000000) {
+            return {
+                세율:42,
+                누진세액공제:49940000
+            }
+        }
+        if(값 > 1000000000) {
+            return {
+                세율:45,
+                누진세액공제:65940000
+            }
+        }
     }
 }
 
@@ -168,9 +200,12 @@ async function analysisData(path) {
         if (당기순이익.length == 0) {
             당기순이익 = extractValuesWithSubstring(tableData, '당기순손익');
         }
+        let test = extractValuesWithSubstring(tableData, '법인명)',2)
+        const 법인 = test.includes("주식회사") || test.includes("(주)") || test.includes("(유)") || test.includes("(합)") || test.includes("( 주 )") || test.includes("( 유 )") || test.includes("( 합 )") ? true : false;
         const 자본금 = extractValuesWithSubstring(tableData, '자본금');
 
-        let 과세계산 = 과세표준계산(Number(당기순이익[0].replace(/,/gi, "")));
+        let 과세계산 = 과세표준계산(Number(당기순이익[0].replace(/,/gi, "")),법인);
+
         let 세금 = Number(당기순이익[0].replace(/,/gi, "")) * (과세계산.세율 / 100) - 과세계산.누진세액공제;
 
         let 자본총액 = Number(당기순이익[0].replace(/,/gi, "")) + Number(자본금[0].replace(/,/gi, ""));
