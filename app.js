@@ -300,8 +300,8 @@ app.post('/makePdf1', async (req, res) => {
         ROE: numberToKorean(Number(pdf1.resultJson['자기자본이익률']))+'%',
     };
     let createlaboratory = ''
-    createlaboratory += "당사의 당기순이익 "+numberToKorean(Number(pdf1.resultJson['장기차입금']))+'원'+"의 추정 납부 세금은 "+numberToKorean(Number(pdf1.resultJson['세금']))+'원'+"이라고 가정한다.\n"
-    createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,\n연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.\n${numberToKorean(Number(pdf1.resultJson['세금']))}원 - 17,500,000원 = ${numberToKorean(Number(pdf1.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf1.resultJson['세금']) - 17500000)}원${Number(pdf1.resultJson['세금']) - 17500000 < 0 ? `(${numberToKorean(Number(pdf1.resultJson['세금']) - 17500000)}원 이월)` : ""}원이다.`
+    createlaboratory += "당사의 당기순이익 "+addCommasToNumber(Number(pdf1.resultJson['장기차입금']))+'원'+"의 추정 납부 세금은 "+addCommasToNumber(Number(pdf1.resultJson['세금']))+'원'+"이라고 가정한다.\n"
+    createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,\n연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.\n${addCommasToNumber(Number(pdf1.resultJson['세금']))}원 - 17,500,000원 = ${addCommasToNumber(Number(pdf1.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf1.resultJson['세금']) - 17500000)}원${Number(pdf1.resultJson['세금']) - 17500000 < 0 ? `(${addCommasToNumber(Number(pdf1.resultJson['세금']) - 17500000)}원 이월)` : ""}이다.`
     const table = {
         headers: ['항목', ''],
         rows: [
@@ -367,6 +367,16 @@ app.post('/makePdf1', async (req, res) => {
     await pdfmake.createPdf(documentDefinition).write('data/'+id+'.pdf', "utf-8")
     res.send(id)
 })
+function addCommasToNumber(number) {
+    // 숫자를 문자열로 변환하고, 천 단위마다 쉼표를 추가합니다.
+    const strNumber = String(number);
+    const parts = strNumber.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // 소수점 아래가 있으면 합쳐줍니다.
+    const formattedNumber = parts.join('.');
+    return formattedNumber;
+}
 app.post('/makePdf2', async (req, res) => {
     let {
         id,
@@ -398,8 +408,8 @@ app.post('/makePdf2', async (req, res) => {
         ROE: numberToKorean(Number(pdf2.resultJson['자기자본이익률']))+'%',
     };
     let createlaboratory = ''
-    createlaboratory += "당사의 당기순이익 "+numberToKorean(Number(pdf2.resultJson['장기차입금']))+'원'+"의 추정 납부 세금은 "+numberToKorean(Number(pdf2.resultJson['세금']))+'원'+"이라고 가정한다.\n"
-    createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,\n연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.\n${numberToKorean(Number(pdf2.resultJson['세금']))}원 - 17,500,000원 = ${numberToKorean(Number(pdf2.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf2.resultJson['세금']) - 17500000)}원${Number(pdf2.resultJson['세금']) - 17500000 < 0 ? `(${numberToKorean(Number(pdf2.resultJson['세금']) - 17500000)}원 이월)` : ""}원이다.`
+    createlaboratory += "당사의 당기순이익 "+addCommasToNumber(Number(pdf2.resultJson['당기순이익']))+'원'+"의 추정 납부 세금은 "+addCommasToNumber(Number(pdf2.resultJson['세금']))+'원'+"이라고 가정한다.\n"
+    createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,\n연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.\n${addCommasToNumber(Number(pdf2.resultJson['세금']))}원 - 17,500,000원 = ${addCommasToNumber(Number(pdf2.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf2.resultJson['세금']) - 17500000)}원${Number(pdf2.resultJson['세금']) - 17500000 < 0 ? `(${numberToKorean(Number(pdf2.resultJson['세금']) - 17500000)}원 이월)` : ""}이다.`
     const table = {
         headers: ['항목', '금액'],
         rows: [
