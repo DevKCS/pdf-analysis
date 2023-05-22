@@ -409,7 +409,7 @@ app.post('/makePdf2', async (req, res) => {
     };
     let createlaboratory = ''
     createlaboratory += "당사의 당기순이익 "+addCommasToNumber(Number(pdf2.resultJson['당기순이익']))+'원'+"의 추정 납부 세금은 "+addCommasToNumber(Number(pdf2.resultJson['세금']))+'원'+"이라고 가정한다.\n"
-    createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,\n연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.\n${addCommasToNumber(Number(pdf2.resultJson['세금']))}원 - 17,500,000원 = ${addCommasToNumber(Number(pdf2.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf2.resultJson['세금']) - 17500000)}원${Number(pdf2.resultJson['세금']) - 17500000 < 0 ? `(${numberToKorean(Number(pdf2.resultJson['세금']) - 17500000)}원 이월)` : ""}이다.`
+    createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,\n연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.\n${addCommasToNumber(Number(pdf2.resultJson['세금']))}원 - 17,500,000원 = ${addCommasToNumber(Number(pdf2.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf2.resultJson['세금']) - 17500000)}원${Number(pdf2.resultJson['세금']) - 17500000 < 0 ? `(${addCommasToNumber(Number(pdf2.resultJson['세금']) - 17500000)}원 이월)` : ""}이다.`
     const table = {
         headers: ['항목', '금액'],
         rows: [
