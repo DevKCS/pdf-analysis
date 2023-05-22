@@ -24,7 +24,7 @@ async function analyzePDF(buffer) {
     }
 }
 
-function extractValuesWithSubstring(arr, substring) {
+function extractValuesWithSubstring(arr, substring,type) {
     const values = [];
 
     for (let i = 0; i < arr.length; i++) {
@@ -200,7 +200,7 @@ async function analysisData(path) {
         if (당기순이익.length == 0) {
             당기순이익 = extractValuesWithSubstring(tableData, '당기순손익');
         }
-        let test = extractValuesWithSubstring(tableData, '법인명)',2)
+        let test = extractValuesWithSubstring(tableData, '법인명)',2)[0]
         const 법인 = test.includes("주식회사") || test.includes("(주)") || test.includes("(유)") || test.includes("(합)") || test.includes("( 주 )") || test.includes("( 유 )") || test.includes("( 합 )") ? true : false;
         const 자본금 = extractValuesWithSubstring(tableData, '자본금');
 
