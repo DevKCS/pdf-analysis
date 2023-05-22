@@ -477,13 +477,13 @@
                                 let createlaboratory = '<br/><br/>[ 연구소 설립시 혜택]<br/>'
                                 let pdf1 = responseJson
                                 createlaboratory += "당사의 당기순이익 "+numberToKorean(Number(pdf1.resultJson['장기차입금']))+'원'+"의 추정 납부 세금은 "+numberToKorean(Number(pdf1.resultJson['세금']))+'원'+"이라고 가정한다.<br/>"
-                                createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,<br/>연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.<br/>${numberToKorean(Number(pdf1.resultJson['세금']))} - 17,500,000원 = ${Number(pdf1.resultJson['세금']) - 17500000 < 0 ? 35000 : Number(pdf1.resultJson['세금']) - 17500000}원이다.`
+                                createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,<br/>연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.<br/>${numberToKorean(Number(pdf1.resultJson['세금']))}원 - 17,500,000원 = ${Number(pdf1.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf1.resultJson['세금']) - 17500000}${Number(pdf1.resultJson['세금']) - 17500000 < 0 ? `(- ${Number(pdf1.resultJson['세금']) - 17500000}원 이월)` : ""}원이다.`
                                 result1.innerHTML += createlaboratory
                                 const result2 = document.getElementById('result2');
                                 result2.innerHTML = "[ AI 분석결과 ]<br/>"+responseJson["AI"].replace(/\n/g, '<br/>');
                                 axios.post('http://34.22.72.47:3000/makePdf1',{pdf1:responseJson,id:uuidv4()}).then((e) => {
                                     downloadPDF(e.data)
-                                    startButton.disabled = false;
+                                    startButton.disabled = false원
                                     input.value = ''
                                     input2.value = ''
                                 })
