@@ -309,7 +309,7 @@
             }
         </script>
         <script>
-
+            let fileId = ""
             function numberFormat(x) {
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
@@ -342,9 +342,9 @@
 
                 return e + resultString;
             }
-            function downloadPDF(id) {
+            function downloadPDF() {
                 // 서버에서 파일을 다운로드하는 로직 작성
-                var fileURL = '/' + id + '.pdf';
+                var fileURL = '/' + fileId + '.pdf';
                 var fileName = '보고서.pdf';
 
                 var a = document.createElement('a');
@@ -374,6 +374,7 @@
             }
             function uploadPDF() {
                 const startButton = document.getElementById("startButton");
+                const downButton = document.getElementById("downButton");
                 startButton.disabled = true;
                 const input = document.getElementById('pdfFile');
                 const input2 = document.getElementById('pdfFile2');
@@ -436,6 +437,7 @@
                             const compareRes = document.getElementById('compare-pane');
                             compareRes.innerHTML = "";
                             startButton.disabled = false;
+                            downButton.disabled = true;
                             return;
                         }
                         if(xhr.status === 500) {
@@ -464,6 +466,7 @@
                                 compareRes.innerHTML = "";
                             }
                             startButton.disabled = false;
+                            downButton.disabled = true;
                             return;
                         }
                         if (xhr.status === 200) {
@@ -491,8 +494,9 @@
                                 const result2 = document.getElementById('result2');
                                 result2.innerHTML = "[ AI 분석결과 ]<br/>"+responseJson["AI"].replace(/\n/g, '<br/>');
                                 axios.post('http://34.22.72.47:3000/makePdf1',{pdf1:responseJson,id:uuidv4()}).then((e) => {
-                                    downloadPDF(e.data)
-                                    startButton.disabled = false원
+                                    fileId = e.data;
+                                    startButton.disabled = false
+                                    downButton.disabled = false;
                                     input.value = ''
                                     input2.value = ''
                                 })
@@ -598,10 +602,11 @@
                                     responseJson.name = input.files[0].name;
                                     responseJson_.name = input2.files[0].name;
                                     axios.post('http://34.22.72.47:3000/makePdf2',{pdf1:responseJson,pdf2:responseJson_,id:uuidv4(),compare:responseJson2["result"],compareDef:salesChangeText+"\n"+profitChangeText+"\n"+debtRatioChangeText+"\n"+capitalChangeText}).then((e) => {
-                                        downloadPDF(e.data)
+                                        fileId = e.data;
                                         input.value = ''
                                         input2.value = ''
                                         startButton.disabled = false;
+                                        downButton.disabled = false;
                                     })
                                 }).catch(function (error) {
                                     console.log(error);
@@ -637,6 +642,7 @@
                 <p>분석할 재무제표 pdf파일을 선택하십시오.</p>
                 <p id="target"></p>
                 <button onclick="uploadPDF()" id="startButton" class="btn btn-success btn-lg">분석시작</button>
+                <button onclick="downloadPDF()" id="startButton" class="btn btn-success btn-lg" disabled>결과 다운로드</button>
             </div>
         </div>
     </div>
