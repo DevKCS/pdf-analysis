@@ -220,10 +220,10 @@ async function analysisData(path) {
         result += "당기순이익 : " + numberToKorean(Number(당기순이익[0].replace(/,/gi, ""))) + "원\n"
         result += "당기순이익에 따른 세금 : " + numberToKorean(Math.round(세금)) + "원\n"
         result += "자본총액 : " + numberToKorean(자본총액) + "원\n"
-        result += "자기자본이익률 : " + (ROE * 100).toFixed(2) + "%"
+        result += "자기자본이익률 : " + (ROE * 100).toFixed(2) + "%\n"
         result += "부채비율 : " + (부채비율 * 100).toFixed(2) + "%\n"
         result += "장기차입금 : " + numberToKorean(Number(장기차입금[0].replace(/,/gi, ""))) + "원\n"
-        result += "장기차입금/매출액 : " + ((Number(장기차입금[0].replace(/,/gi, "")) / Number(매출액[0].replace(/,/gi, ""))).toFixed(5) * 100).toFixed(3) + "%\n"
+        result += "장기차입금/매출액 : " + ((Number(장기차입금[0].replace(/,/gi, "")) / Number(매출액[0].replace(/,/gi, ""))).toFixed(5) * 100).toFixed(3) + "%"
         let resultJson = {
             장기차입금: Number(장기차입금[0].replace(/,/gi, "")),
             매출액: Number(매출액[0].replace(/,/gi, "")),
