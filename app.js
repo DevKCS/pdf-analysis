@@ -216,14 +216,14 @@ async function analysisData(path) {
 
 
         let result = ""
-        result += "장기차입금 : " + numberToKorean(Number(장기차입금[0].replace(/,/gi, ""))) + "원\n"
         result += "매출액 : " + numberToKorean(Number(매출액[0].replace(/,/gi, ""))) + "원\n"
         result += "당기순이익 : " + numberToKorean(Number(당기순이익[0].replace(/,/gi, ""))) + "원\n"
         result += "당기순이익에 따른 세금 : " + numberToKorean(Math.round(세금)) + "원\n"
-        result += "장기차입금/매출액 : " + ((Number(장기차입금[0].replace(/,/gi, "")) / Number(매출액[0].replace(/,/gi, ""))).toFixed(5) * 100).toFixed(3) + "%\n"
         result += "자본총액 : " + numberToKorean(자본총액) + "원\n"
-        result += "부채비율 : " + (부채비율 * 100).toFixed(2) + "%\n"
         result += "자기자본이익률 : " + (ROE * 100).toFixed(2) + "%"
+        result += "부채비율 : " + (부채비율 * 100).toFixed(2) + "%\n"
+        result += "장기차입금 : " + numberToKorean(Number(장기차입금[0].replace(/,/gi, ""))) + "원\n"
+        result += "장기차입금/매출액 : " + ((Number(장기차입금[0].replace(/,/gi, "")) / Number(매출액[0].replace(/,/gi, ""))).toFixed(5) * 100).toFixed(3) + "%\n"
         let resultJson = {
             장기차입금: Number(장기차입금[0].replace(/,/gi, "")),
             매출액: Number(매출액[0].replace(/,/gi, "")),
@@ -335,19 +335,19 @@ app.post('/makePdf1', async (req, res) => {
         ROE: numberToKorean(Number(pdf1.resultJson['자기자본이익률']))+'%',
     };
     let createlaboratory = ''
-    createlaboratory += "당사의 당기순이익 "+addCommasToNumber(Number(pdf1.resultJson['장기차입금']))+'원'+"의 추정 납부 세금은 "+addCommasToNumber(Number(pdf1.resultJson['세금']))+'원'+"이라고 가정한다.\n"
+    createlaboratory += "당사의 당기순이익 "+addCommasToNumber(Number(pdf1.resultJson['당기순이익']))+'원'+"의 추정 납부 세금은 "+addCommasToNumber(Number(pdf1.resultJson['세금']))+'원'+"이라고 가정한다.\n"
     createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,\n연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.\n${addCommasToNumber(Number(pdf1.resultJson['세금']))}원 - 17,500,000원 = ${addCommasToNumber(Number(pdf1.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf1.resultJson['세금']) - 17500000)}원${Number(pdf1.resultJson['세금']) - 17500000 < 0 ? `(${addCommasToNumber(Number(pdf1.resultJson['세금']) - 17500000)}원 이월)` : ""}이다.`
     const table = {
         headers: ['항목', ''],
         rows: [
-            ['장기차입금', reportData.loanAmount],
             ['매출액', reportData.sales],
             ['당기순이익', reportData.netProfit],
             ['당기순이익에 따른 세금', reportData.tax],
-            ['장기차입금/매출액', reportData.loanToSalesRatio],
             ['자본총액', reportData.totalEquity],
-            ['부채비율', reportData.debtRatio],
             ['자기자본이익률', reportData.ROE],
+            ['부채비율', reportData.debtRatio],
+            ['장기차입금', reportData.loanAmount],
+            ['장기차입금/매출액', reportData.loanToSalesRatio],
         ],
     };
     const documentDefinition = {
@@ -446,29 +446,29 @@ app.post('/makePdf2', async (req, res) => {
     createlaboratory += "당사의 당기순이익 "+addCommasToNumber(Number(pdf2.resultJson['당기순이익']))+'원'+"의 추정 납부 세금은 "+addCommasToNumber(Number(pdf2.resultJson['세금']))+'원'+"이라고 가정한다.\n"
     createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,\n연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.\n${addCommasToNumber(Number(pdf2.resultJson['세금']))}원 - 17,500,000원 = ${addCommasToNumber(Number(pdf2.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf2.resultJson['세금']) - 17500000)}원${Number(pdf2.resultJson['세금']) - 17500000 < 0 ? `(${addCommasToNumber(Number(pdf2.resultJson['세금']) - 17500000)}원 이월)` : ""}이다.`
     const table = {
-        headers: ['항목', '금액'],
+        headers: ['항목', ''],
         rows: [
-            ['장기차입금', reportData.loanAmount],
             ['매출액', reportData.sales],
             ['당기순이익', reportData.netProfit],
             ['당기순이익에 따른 세금', reportData.tax],
-            ['장기차입금/매출액', reportData.loanToSalesRatio],
             ['자본총액', reportData.totalEquity],
-            ['부채비율', reportData.debtRatio],
             ['자기자본이익률', reportData.ROE],
+            ['부채비율', reportData.debtRatio],
+            ['장기차입금', reportData.loanAmount],
+            ['장기차입금/매출액', reportData.loanToSalesRatio],
         ],
     };
     const table2 = {
         headers: ['항목', '금액'],
         rows: [
-            ['장기차입금', reportData2.loanAmount],
             ['매출액', reportData2.sales],
             ['당기순이익', reportData2.netProfit],
             ['당기순이익에 따른 세금', reportData2.tax],
-            ['장기차입금/매출액', reportData2.loanToSalesRatio],
             ['자본총액', reportData2.totalEquity],
-            ['부채비율', reportData2.debtRatio],
             ['자기자본이익률', reportData2.ROE],
+            ['부채비율', reportData2.debtRatio],
+            ['장기차입금', reportData2.loanAmount],
+            ['장기차입금/매출액', reportData2.loanToSalesRatio],
         ],
     };
     const documentDefinition = {
