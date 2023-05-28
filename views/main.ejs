@@ -272,7 +272,7 @@
     <script>
         function login() {
             var password = document.getElementById("password").value;
-            location.href = "http://localhost:3000/login?pw=" + password;
+            location.href = "http://34.22.72.47:3000/login?pw=" + password;
         }
 
     </script>
@@ -420,7 +420,7 @@
                     return;
                 }
                 // 서버 업로드 URL
-                const url = 'http://localhost:3000/upload'; // 실제 서버 URL로 변경해야 합니다.
+                const url = 'http://34.22.72.47:3000/upload'; // 실제 서버 URL로 변경해야 합니다.
                 // XMLHttpRequest를 사용하여 파일 업로드 요청
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', url, true);
@@ -494,7 +494,7 @@
                                 result1.innerHTML += createlaboratory
                                 const result2 = document.getElementById('result2');
                                 result2.innerHTML = "[ AI 분석결과 ]<br/>"+responseJson["AI"].replace(/\n/g, '<br/>');
-                                axios.post('http://localhost:3000/makePdf1',{pdf1:responseJson,id:uuidv4()}).then((e) => {
+                                axios.post('http://34.22.72.47:3000/makePdf1',{pdf1:responseJson,id:uuidv4()}).then((e) => {
                                     fileId = e.data;
                                     startButton.disabled = false
                                     downButton.disabled = false;
@@ -593,7 +593,7 @@
                             <div class="bg-light border rounded border-light jumbotron py-5 px-4" id="loading2">
                                 <p id="compare">AI가 두 재무제표 파일을 비교 분석중입니다...</p>
                             </div>`
-                                axios.post('http://localhost:3000/compare',{
+                                axios.post('http://34.22.72.47:3000/compare',{
                                     pdf1:responseJson.재무제표,
                                     pdf2:responseJson_.재무제표
                                 }).then(function (response) {
@@ -602,7 +602,7 @@
                                     compareRes.innerHTML = "[ AI 비교결과 ]<br/>"+responseJson2["result"].replace(/\n/g, '<br/>');
                                     responseJson.name = input.files[0].name;
                                     responseJson_.name = input2.files[0].name;
-                                    axios.post('http://localhost:3000/makePdf2',{pdf1:responseJson,pdf2:responseJson_,id:uuidv4(),compare:responseJson2["result"],compareDef:salesChangeText+"\n"+profitChangeText+"\n"+debtRatioChangeText+"\n"+capitalChangeText}).then((e) => {
+                                    axios.post('http://34.22.72.47:3000/makePdf2',{pdf1:responseJson,pdf2:responseJson_,id:uuidv4(),compare:responseJson2["result"],compareDef:salesChangeText+"\n"+profitChangeText+"\n"+debtRatioChangeText+"\n"+capitalChangeText}).then((e) => {
                                         fileId = e.data;
                                         input.value = ''
                                         input2.value = ''
