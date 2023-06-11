@@ -50,6 +50,7 @@ async function modifyPdf(resJson, id) {
     const bold = await pdfDoc.embedFont(fs.readFileSync("./fonts/Pretendard-Bold.ttf"))
 
     const pages = pdfDoc.getPages()
+    const main = pages[0]
     const airesult1 = pages[1]
     const airesult2 = pages[3]
     const createlab = pages[4]
@@ -57,7 +58,15 @@ async function modifyPdf(resJson, id) {
     const final = pages[7]
     const { width, height } = airesult1.getSize()
 
-
+    //메인화면
+    main.drawText(resJson.resultJson.기업명, {
+        x: width / 2 - (def.widthOfTextAtSize(resJson.resultJson.기업명, 40) / 2),
+        y: height / 2 - 168.5,
+        size: 40,
+        font: bold,
+        color: rgb(1, 1, 1)
+    })
+    
     //AI분석결과 작성 789글자 제한
     //resJson.AI
     airesult1.drawText(splitText(resJson.AI, 45), {
@@ -310,8 +319,8 @@ async function modifyPdf(resJson, id) {
     })
 
     //세금혜택 - 혜택합계
-    final.drawText(addCommasToNumber((((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) = Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), {
-        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) = Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), 22) / 2) + (173.5 * 3),
+    final.drawText(addCommasToNumber((((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), {
+        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), 22) / 2) + (173.5 * 3),
         y: height / 2 + 84 - (57 * 2),
         size: 22,
         font: def,
@@ -328,7 +337,7 @@ async function modifyPdf(resJson, id) {
     })
 
     //세금혜택 - 혜택합계
-    final.drawText(`정책자금 한도는 최소 ${addCommasToNumber((Math.floor(Math.floor(resJson.resultJson.매출액 * 0.5) * 1.2) - Math.floor(resJson.resultJson.매출액 * 0.5)) + (Math.floor(Math.floor(resJson.resultJson.매출액 * 0.5) * 1.25) - Math.floor(resJson.resultJson.매출액 * 0.5)))}원 증가 됩니다.\n정책자금 이자는 최소 ${addCommasToNumber(Math.floor(Math.floor(resJson.resultJson.매출액 * 0.5) * 0.014))}원 감소 됩니다.\n세금납부 금액은 ${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월))}원 주가 감면됩니다.`, {
+    final.drawText(`정책자금 한도는 최소 ${addCommasToNumber((Math.floor(Math.floor(resJson.resultJson.매출액 * 0.5) * 1.2) - Math.floor(resJson.resultJson.매출액 * 0.5)) + (Math.floor(Math.floor(resJson.resultJson.매출액 * 0.5) * 1.25) - Math.floor(resJson.resultJson.매출액 * 0.5)))}원 증가 됩니다.\n정책자금 이자는 최소 ${addCommasToNumber(Math.floor(Math.floor(resJson.resultJson.매출액 * 0.5) * 0.014))}원 감소 됩니다.\n세금납부 금액은 ${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월))}원 추가 감면됩니다.`, {
         x: width / 2 + -245,
         y: height / 2 - 264.5,
         size: 22,
