@@ -272,7 +272,7 @@
     <script>
         function login() {
             var password = document.getElementById("password").value;
-            location.href = "http://34.22.72.47:3000/login?pw=" + password;
+            location.href = "http://localhost:3000/login?pw=" + password;
         }
 
     </script>
@@ -378,13 +378,12 @@
                 startButton.disabled = true;
                 downButton.disabled = true;
                 const input = document.getElementById('pdfFile');
-                const input2 = document.getElementById('pdfFile2');
-                if (input.files.length + input2.files.length > 2) {
+                if (input.files.length  > 1) {
                     alert('파일은 최대 2개까지 선택할 수 있습니다.');
                     input.value = ''; // 파일 선택 input 초기화
                     return;
                 }
-                if(input.files.length + input2.files.length == 1) {
+                if(input.files.length == 1) {
                     const result1 = document.getElementById('result1');
                     result1.innerHTML = input.files[0].name+" 파일을 분석 중입니다...";
                     const result2 = document.getElementById('result2');
@@ -396,23 +395,8 @@
                     const compareRes = document.getElementById('compare-pane');
                     compareRes.innerHTML = "";
                 }
-                if(input.files.length + input2.files.length == 2) {
-                    const result1 = document.getElementById('result1');
-                    result1.innerHTML = input.files[0].name+" 파일을 분석 중입니다...";
-                    const result2 = document.getElementById('result2');
-                    result2.innerHTML = "";
-                    const result3 = document.getElementById('result3');
-                    result3.innerHTML = input2.files[0].name+" 파일을 분석 중입니다...";
-                    const result4 = document.getElementById('result4');
-                    result4.innerHTML = "";
-                    const compareRes = document.getElementById('compare-pane');
-                    compareRes.innerHTML = "";
-                }
                 const formData = new FormData();
-                if(input.files.length + input2.files.length == 2) {
-                    formData.append('pdf', input.files[0]);
-                    formData.append('pdf', input2.files[0]);
-                } else if(input.files.length + input2.files.length == 1) {
+                if(input.files.length == 1) {
                     formData.append('pdf', input.files[0]);
                 } else {
                     alert('파일을 선택해주세요.');
@@ -420,7 +404,7 @@
                     return;
                 }
                 // 서버 업로드 URL
-                const url = 'http://34.22.72.47:3000/upload'; // 실제 서버 URL로 변경해야 합니다.
+                const url = 'http://localhost:3000/upload'; // 실제 서버 URL로 변경해야 합니다.
                 // XMLHttpRequest를 사용하여 파일 업로드 요청
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', url, true);
@@ -437,35 +421,6 @@
                             result4.innerHTML = "";
                             const compareRes = document.getElementById('compare-pane');
                             compareRes.innerHTML = "";
-                            startButton.disabled = false;
-                            downButton.disabled = true;
-                            return;
-                        }
-                        if(xhr.status === 500) {
-                            if(files.length == 1) {
-                                const result1 = document.getElementById('result1');
-                                result1.innerHTML = input.files[0].name+" 파일분석에 실패하였습니다.";
-                                const result2 = document.getElementById('result2');
-                                result2.innerHTML = "";
-                                const result3 = document.getElementById('result3');
-                                result3.innerHTML = "";
-                                const result4 = document.getElementById('result4');
-                                result4.innerHTML = "";
-                                const compareRes = document.getElementById('compare-pane');
-                                compareRes.innerHTML = "";
-                            }
-                            if(files.length == 2) {
-                                const result1 = document.getElementById('result1');
-                                result1.innerHTML = input.files[0].name+" 파일분석에 실패하였습니다.";
-                                const result2 = document.getElementById('result2');
-                                result2.innerHTML = "";
-                                const result3 = document.getElementById('result3');
-                                result3.innerHTML = input2.files[0].name+" 파일분석에 실패하였습니다.";
-                                const result4 = document.getElementById('result4');
-                                result4.innerHTML = "";
-                                const compareRes = document.getElementById('compare-pane');
-                                compareRes.innerHTML = "";
-                            }
                             startButton.disabled = false;
                             downButton.disabled = true;
                             return;
@@ -494,124 +449,13 @@
                                 result1.innerHTML += createlaboratory
                                 const result2 = document.getElementById('result2');
                                 result2.innerHTML = "[ AI 분석결과 ]<br/>"+responseJson["AI"].replace(/\n/g, '<br/>');
-                                axios.post('http://34.22.72.47:3000/makePdf1',{pdf1:responseJson,id:uuidv4()}).then((e) => {
+                                axios.post('http://localhost:3000/makePdf1',{pdf1:responseJson,id:uuidv4()}).then((e) => {
                                     fileId = e.data;
                                     startButton.disabled = false
                                     downButton.disabled = false;
                                     input.value = ''
                                     input2.value = ''
                                 })
-                            }else if(JSON.parse(xhr.responseText).length == 2) {
-                                const responseJson = JSON.parse(xhr.responseText)[0]
-                                const result1 = document.getElementById('result1');
-                                result1.innerHTML = "[ "+input.files[0].name+" 파일 분석 결과 ]<br/>"+responseJson.재무제표.replace(/\n/g, '<br/>');
-                                const result2 = document.getElementById('result2');
-                                result2.innerHTML = "[ AI 분석결과 ]<br/>"+responseJson["AI"].replace(/\n/g, '<br/>');
-                                const responseJson_ = JSON.parse(xhr.responseText)[1]
-                                const result1_ = document.getElementById('result3');
-                                result1_.innerHTML ="[ "+input2.files[0].name+" 파일 분석 결과 ]<br/>"+ responseJson_.재무제표.replace(/\n/g, '<br/>');
-                                const result2_ = document.getElementById('result4');
-                                result2_.innerHTML = "[ AI 분석결과 ]<br/>"+responseJson_["AI"].replace(/\n/g, '<br/>');
-                                if(responseJson_.resultJson.부채비율 >= 50) {
-                                    result1_.innerHTML += "<br/><br/>[ 예상 대출액 평가 ] <br/>대출 가능여부 : 불가능";
-                                    responseJson_["대출예상"] = "대출 가능여부 : 불가능"
-                                    responseJson_["대출예상액"] = ""
-                                } else {
-                                    const decreasePercentage = ((responseJson.resultJson.자본총액 - responseJson_.resultJson.자본총액) / responseJson.resultJson.자본총액) * 100;
-                                    if (decreasePercentage > 0) {
-                                        result1_.innerHTML += "<br/><br/>[ 예상 대출액 평가 ] <br/>대출 가능여부 : 불가능";
-                                        responseJson_["대출예상"] = "대출 가능여부 : 불가능"
-                                        responseJson_["대출예상액"] = ""
-                                    } else {
-                                        let n = (Number(responseJson_.resultJson['매출액'])*0.4)-Number(responseJson_.resultJson['장기차입금'])
-                                        if(n > 300000000) n = 300000000;
-                                        result1_.innerHTML += "<br/><br/>[ 예상 대출액 평가 ] <br/>대출 가능여부 : 가능<br/>예상 대출액 : "+numberToKorean(n)+'원';
-                                        responseJson_["대출예상"] = "대출 가능여부 : 가능"
-                                        responseJson_["대출예상액"] = "예상 대출액 : "+numberToKorean(n)+'원'
-                                    }
-                                }
-                                responseJson_.name = input2.files[0].name;
-                                responseJson.name = input.files[0].name;
-                                let createlaboratory = '<br/><br/>[ 연구소 설립시 혜택]<br/>'
-                                let pdf2 = responseJson_
-                                createlaboratory += "당사의 당기순이익 "+addCommasToNumber(Number(pdf2.resultJson['당기순이익']))+'원'+"의 추정 납부 세금은 "+addCommasToNumber(Number(pdf2.resultJson['세금']))+'원'+"이라고 가정한다.<br/>"
-                                createlaboratory += `연구소를 설립하여 "2명"의 연구원의 임금을 1년 "35,000,000원"으로 책정했을 경우,<br/>연구원 투입 임금의 25%가 세액공제 된다.\n즉, 35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 절감 된다.<br/>${addCommasToNumber(Number(pdf2.resultJson['세금']))}원 - 17,500,000원 = ${addCommasToNumber(Number(pdf2.resultJson['세금']) - 17500000 < 0 ? 0 : Number(pdf2.resultJson['세금']) - 17500000)}원${Number(pdf2.resultJson['세금']) - 17500000 < 0 ? `(${addCommasToNumber(Number(pdf2.resultJson['세금']) - 17500000)}원 이월)` : ""}이다.`
-                                result1_.innerHTML += createlaboratory
-                                result2_.innerHTML += "<br/><br/>[ 일반 비교결과 ]<br/>"+input.files[0].name+"대비 "+input2.files[0].name+"의 비교결과입니다.<br/>";
-                                let v1 = responseJson.resultJson;
-                                let v2 = responseJson_.resultJson;
-                                // 매출액 비교
-                                const salesChange = v2['매출액'] - v1['매출액'];
-                                const salesPercentChange = ((salesChange / v1['매출액']) * 100).toFixed(2);
-                                let salesChangeText = '';
-                                if (salesChange > 0) {
-                                    salesChangeText = `매출액이 ${Math.abs(salesChange).toLocaleString()}원 증가하였습니다 (${salesPercentChange}%)`;
-                                } else if (salesChange < 0) {
-                                    salesChangeText = `매출액이 ${Math.abs(salesChange).toLocaleString()}원 감소하였습니다 (${salesPercentChange}%)`;
-                                } else {
-                                    salesChangeText = '매출액 변동이 없습니다.';
-                                }
-
-                                // 당기순이익 비교
-                                const profitChange = v2['당기순이익'] - v1['당기순이익'];
-                                const profitPercentChange = ((profitChange / v1['당기순이익']) * 100).toFixed(2);
-                                let profitChangeText = '';
-                                if (profitChange > 0) {
-                                    profitChangeText = `당기순이익이 ${Math.abs(profitChange).toLocaleString()}원 증가하였습니다 (${profitPercentChange}%)`;
-                                } else if (profitChange < 0) {
-                                    profitChangeText = `당기순이익이 ${Math.abs(profitChange).toLocaleString()}원 감소하였습니다 (${profitPercentChange}%)`;
-                                } else {
-                                    profitChangeText = '당기순이익 변동이 없습니다.';
-                                }
-
-                                // 부채비율 비교
-                                const debtRatioChange = parseFloat(v2['부채비율']) - parseFloat(v1['부채비율']);
-                                const debtRatioPercentChange = ((debtRatioChange / parseFloat(v1['부채비율'])) * 100).toFixed(2);
-                                let debtRatioChangeText = '';
-                                if (debtRatioChange > 0) {
-                                    debtRatioChangeText = `부채비율이 ${Math.abs(debtRatioChange).toFixed(2)}% 증가하였습니다 (${debtRatioPercentChange}%)`;
-                                } else if (debtRatioChange < 0) {
-                                    debtRatioChangeText = `부채비율이 ${Math.abs(debtRatioChange).toFixed(2)}% 감소하였습니다 (${debtRatioPercentChange}%)`;
-                                } else {
-                                    debtRatioChangeText = '부채비율 변동이 없습니다.';
-                                }
-
-                                // 자본총액 비교
-                                const capitalChange = v2['자본총액'] - v1['자본총액'];
-                                const capitalPercentChange = ((capitalChange / v1['자본총액']) * 100).toFixed(2);
-                                let capitalChangeText = '';
-                                if (capitalChange > 0) {
-                                    capitalChangeText = `자본총액이 ${Math.abs(capitalChange).toLocaleString()}원 증가하였습니다 (${capitalPercentChange}%)`;
-                                } else if (capitalChange < 0) {
-                                    capitalChangeText = `자본총액이 ${Math.abs(capitalChange).toLocaleString()}원 감소하였습니다 (${capitalPercentChange}%)`;
-                                } else {
-                                    capitalChangeText = '자본총액 변동이 없습니다.';
-                                }
-                                result2_.innerHTML += salesChangeText+"<br/>"+profitChangeText+"<br/>"+debtRatioChangeText+"<br/>"+capitalChangeText;
-                                const compareRes = document.getElementById('compare-pane');
-                                compareRes.innerHTML = `
-                            <div class="bg-light border rounded border-light jumbotron py-5 px-4" id="loading2">
-                                <p id="compare">AI가 두 재무제표 파일을 비교 분석중입니다...</p>
-                            </div>`
-                                axios.post('http://34.22.72.47:3000/compare',{
-                                    pdf1:responseJson.재무제표,
-                                    pdf2:responseJson_.재무제표
-                                }).then(function (response) {
-                                    const responseJson2 = response.data
-                                    const compareRes = document.getElementById('compare');
-                                    compareRes.innerHTML = "[ AI 비교결과 ]<br/>"+responseJson2["result"].replace(/\n/g, '<br/>');
-                                    responseJson.name = input.files[0].name;
-                                    responseJson_.name = input2.files[0].name;
-                                    axios.post('http://34.22.72.47:3000/makePdf2',{pdf1:responseJson,pdf2:responseJson_,id:uuidv4(),compare:responseJson2["result"],compareDef:salesChangeText+"\n"+profitChangeText+"\n"+debtRatioChangeText+"\n"+capitalChangeText}).then((e) => {
-                                        fileId = e.data;
-                                        input.value = ''
-                                        input2.value = ''
-                                        startButton.disabled = false;
-                                        downButton.disabled = false;
-                                    })
-                                }).catch(function (error) {
-                                    console.log(error);
-                                });
                             }
                         } else {
                             // 업로드 실패 시 동작할 코드
@@ -639,7 +483,6 @@
                 <div id="compare-pane">
                 </div>
                 <input type="file" id="pdfFile" accept="application/pdf" multiple onchange="handleFileSelect(event)"><br/>
-                <input type="file" id="pdfFile2" accept="application/pdf" multiple onchange="handleFileSelect(event)"><br/>
                 <p>분석할 재무제표 pdf파일을 선택하십시오.</p>
                 <p id="target"></p>
                 <button onclick="uploadPDF()" id="startButton" class="btn btn-success btn-lg">분석시작</button>
