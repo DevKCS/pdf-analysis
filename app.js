@@ -310,8 +310,8 @@ async function modifyPdf(resJson, id) {
     })
 
     //세금혜택 - 혜택합계
-    final.drawText(addCommasToNumber(((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) - resJson.resultJson.세금), {
-        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber(((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) - resJson.resultJson.세금), 22) / 2) + (173.5 * 3),
+    final.drawText(addCommasToNumber((((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) = Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), {
+        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) = Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), 22) / 2) + (173.5 * 3),
         y: height / 2 + 84 - (57 * 2),
         size: 22,
         font: def,
@@ -553,7 +553,7 @@ async function analysisData(path) {
             비유동부채: Number(extractValuesWithSubstring(tableData, '비유동부채')[0].replace(/,/gi, "")),
             이익잉여금: Number(이익잉여금.replace(/,/gi, ""))
         }
-        let question = "너는 재무제표를 평가하는 AI야.\n" + result + "\n이 데이터는 회사의 재무제표증명서를 요약한 데이터야\n이 데이터를 바탕으로 이 회사의 현재 상태를 재무제표평가적으로 평가해. 단, 1번, 2번, 3번 이렇게 번호를 붙여서 각각평가하고 최대 10번까지 번호를 붙여서 평가해."
+        let question = "너는 재무제표를 평가하는 AI야.\n" + result + "\n이 데이터는 회사의 재무제표증명서를 요약한 데이터야\n이 데이터를 바탕으로 이 회사의 현재 상태를 재무제표평가적으로 평가해. 단, 600자가 넘어가지 안도록 핵심위주로 평가해"
         let q = new wrtn()
         await q.loginByEmail("39siw7sm29@naver.com", "39siw7sm29!")
         let roomId = await q.addRoom()
