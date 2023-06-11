@@ -272,7 +272,7 @@
     <script>
         function login() {
             var password = document.getElementById("password").value;
-            location.href = "http://localhost:3000/login?pw=" + password;
+            location.href = "http://34.22.72.47:3000/login?pw=" + password;
         }
 
     </script>
@@ -404,7 +404,7 @@
                     return;
                 }
                 // 서버 업로드 URL
-                const url = 'http://localhost:3000/upload'; // 실제 서버 URL로 변경해야 합니다.
+                const url = 'http://34.22.72.47:3000/upload'; // 실제 서버 URL로 변경해야 합니다.
                 // XMLHttpRequest를 사용하여 파일 업로드 요청
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', url, true);
@@ -449,7 +449,7 @@
                                 result1.innerHTML += createlaboratory
                                 const result2 = document.getElementById('result2');
                                 result2.innerHTML = "[ AI 분석결과 ]<br/>"+responseJson["AI"].replace(/\n/g, '<br/>');
-                                axios.post('http://localhost:3000/makePdf1',{pdf1:responseJson,id:uuidv4()}).then((e) => {
+                                axios.post('http://34.22.72.47:3000/makePdf1',{pdf1:responseJson,id:uuidv4()}).then((e) => {
                                     fileId = e.data;
                                     startButton.disabled = false
                                     downButton.disabled = false;
