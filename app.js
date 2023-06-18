@@ -43,7 +43,7 @@ function splitText(text, n) {
 }
 
 async function modifyPdf(resJson, id) {
-    let 예상대출 = Math.floor(resJson.resultJson.매출액 * 0.5) > 3000000000 ? 3000000000 : Math.floor(resJson.resultJson.매출액 * 0.5)
+    let 예상대출 = Math.floor(resJson.resultJson.매출액 * 0.5) > 1000000000 ? 1000000000 : Math.floor(resJson.resultJson.매출액 * 0.5)
     const pdfDoc = await PDFDocument.load(fs.readFileSync('./최종본V2.pdf').buffer)
     pdfDoc.registerFontkit(fontkit);
     const def = await pdfDoc.embedFont(fs.readFileSync("./fonts/Pretendard-Regular.ttf"))
@@ -213,7 +213,7 @@ async function modifyPdf(resJson, id) {
         font: bold,
         color: rgb(0, 0, 0)
     })
-    let max대출 = addCommasToNumber(Math.floor(resJson.resultJson.매출액 * 0.4) > 500000000 ? 500000000 : Math.floor(resJson.resultJson.매출액 * 0.4))
+    let max대출 = addCommasToNumber(Math.floor(resJson.resultJson.매출액 * 0.4) > 330000000 ? 330000000 : Math.floor(resJson.resultJson.매출액 * 0.4))
     airesult2.drawText(`매출액 ${addCommasToNumber(resJson.resultJson.매출액)}원의 예상 최대 정책자금(운전자금)은의 `, {
         x: width / 2 + 55,
         y: height / 2 - 89,
@@ -459,8 +459,8 @@ async function modifyPdf(resJson, id) {
     })
 
     //정책자금 이자 - 혜택합계
-    final.drawText(addCommasToNumber(Math.floor(예상대출 * 0.014)), {
-        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber(Math.floor(예상대출 * 0.014)), 22) / 2) + (173.5 * 3),
+    final.drawText(addCommasToNumber(Math.floor(예상대출 * 0.015)), {
+        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber(Math.floor(예상대출 * 0.015)), 22) / 2) + (173.5 * 3),
         y: height / 2 + 84 - 57,
         size: 22,
         font: def,
@@ -779,8 +779,8 @@ async function analysisData(path) {
         const 자본금 = extractValuesWithSubstring(tableData, '자본금');
 
         let 과세계산 = 과세표준계산(Number(당기순이익[0].replace(/,/gi, "")), 법인);
-
         let 세금 = Number(당기순이익[0].replace(/,/gi, "")) * (과세계산.세율 / 100) - 과세계산.누진세액공제;
+        if(Number(당기순이익[0].replace(/,/gi, "")) > 200000000) 세금 = (Number(당기순이익[0].replace(/,/gi, "")) * 0.09) + (Number(당기순이익[0].replace(/,/gi, ""))-200000000) * (과세계산.세율 / 100) - 과세계산.누진세액공제
 
         let 자본총액 = Number(당기순이익[0].replace(/,/gi, "")) + Number(자본금[0].replace(/,/gi, ""));
 
