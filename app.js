@@ -243,6 +243,7 @@ async function modifyPdf(resJson, id) {
         color: rgb(0, 0, 0)
     })
     //연구소설립효과
+    let 절약
     let createlaboratory = ''
     createlaboratory += `당사의 당기순이익 ${addCommasToNumber(resJson.resultJson.당기순이익)}원의 추정 납부 세금은 ${addCommasToNumber(resJson.resultJson.세금)}원이라고 가정한다.`
     createlab.drawText(splitText(createlaboratory, 46), {
@@ -252,41 +253,60 @@ async function modifyPdf(resJson, id) {
         font: light,
         color: rgb(0, 0, 0)
     })
+    if(Number(resJson.resultJson.세금) - 17500000 < Math.floor(resJson.resultJson.당기순이익 * 0.07) && (Number(resJson.resultJson.세금) - 17500000 > 0)) {
+        let createlaboratorySim = `'1명'의 연구원 임금을 각 1년 '35,000,000원으로 책정했을 경우\n35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 공제 된다.\n당사의 최종 납부 세금은 ${addCommasToNumber(resJson.resultJson.세금)}원 - 17,500,000원 = ${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000 < 0 ? 0 : Number(resJson.resultJson.세금) - 17500000)}원${Number(resJson.resultJson.세금) - 17500000 < 0 ? `\n(${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000)}원 이월가능)` : ""}이다.\n하지만, 최저한세로 인해 ${addCommasToNumber(resJson.resultJson.당기순이익)}원 x 7% = `
+        createlab.drawText(splitText(createlaboratorySim, 51), {
+            x: width / 2 + 55,
+            y: height / 2 - 79,
+            size: 20,
+            font: light,
+            color: rgb(0, 0, 0)
+        })
 
-    let createlaboratorySim = `'1명'의 연구원 임금을 각 1년 '35,000,000원으로 책정했을 경우\n35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 공제 된다.\n당사의 최종 납부 세금은 ${addCommasToNumber(resJson.resultJson.세금)}원 - 17,500,000원 = ${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000 < 0 ? 0 : Number(resJson.resultJson.세금) - 17500000)}원${Number(resJson.resultJson.세금) - 17500000 < 0 ? `\n(${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000)}원 이월가능)` : ""}이다.\n하지만, 최저한세로 인해 ${addCommasToNumber(resJson.resultJson.당기순이익)}원 x 7% = `
-    createlab.drawText(splitText(createlaboratorySim, 51), {
-        x: width / 2 + 55,
-        y: height / 2 - 79,
-        size: 20,
-        font: light,
-        color: rgb(0, 0, 0)
-    })
+        createlab.drawText(`${addCommasToNumber(Math.floor(resJson.resultJson.당기순이익 * 0.07))}원을`, {
+            x: width / 2 + 55 + light.widthOfTextAtSize(`하지만, 최저한세로 인해 ${addCommasToNumber(resJson.resultJson.당기순이익)}원 x 7% = `, 20),
+            y: height / 2 - 79 - (24 * 4),
+            size: 20,
+            font: light,
+            color: rgb(1, 0, 0)
+        })
 
-    createlab.drawText(`${addCommasToNumber(Math.floor(resJson.resultJson.당기순이익 * 0.07))}원을`, {
-        x: width / 2 + 55 + light.widthOfTextAtSize(`하지만, 최저한세로 인해 ${addCommasToNumber(resJson.resultJson.당기순이익)}원 x 7% = `, 20),
-        y: height / 2 - 79 - (24 * 4),
-        size: 20,
-        font: light,
-        color: rgb(1, 0, 0)
-    })
+        createlab.drawText(`최종납부`, {
+            x: width / 2 + 55,
+            y: height / 2 - 79 - (24 * 5),
+            size: 20,
+            font: light,
+            color: rgb(1, 0, 0)
+        })
 
-    createlab.drawText(`최종납부`, {
-        x: width / 2 + 55,
-        y: height / 2 - 79 - (24 * 5),
-        size: 20,
-        font: light,
-        color: rgb(1, 0, 0)
-    })
+        createlab.drawText(`하게된다.`, {
+            x: width / 2 + 55 + light.widthOfTextAtSize('최종납부', 20),
+            y: height / 2 - 79 - (24 * 5),
+            size: 20,
+            font: light,
+            color: rgb(0, 0, 0)
+        })
+        절약 = Math.floor(resJson.resultJson.당기순이익 * 0.07)
+    } else if(Number(resJson.resultJson.세금) - 17500000 < Math.floor(resJson.resultJson.당기순이익 * 0.07) || (Number(resJson.resultJson.세금) - 17500000 < 0)) {
+        let createlaboratorySim = `'1명'의 연구원 임금을 각 1년 '35,000,000원으로 책정했을 경우\n35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 공제 된다.`
+        createlab.drawText(splitText(createlaboratorySim, 51), {
+            x: width / 2 + 55,
+            y: height / 2 - 79,
+            size: 20,
+            font: light,
+            color: rgb(0, 0, 0)
+        })
 
-    createlab.drawText(`하게된다.`, {
-        x: width / 2 + 55 + light.widthOfTextAtSize('최종납부', 20),
-        y: height / 2 - 79 - (24 * 5),
-        size: 20,
-        font: light,
-        color: rgb(0, 0, 0)
-    })
-
-    createlab.drawText(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(Math.floor(resJson.resultJson.당기순이익 * 0.07))}원 = `, {
+        createlab.drawText(`당사의 최종 납부 세금은 ${addCommasToNumber(resJson.resultJson.세금)}원 - 17,500,000원 = ${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000 < 0 ? 0 : Number(resJson.resultJson.세금) - 17500000)}원${Number(resJson.resultJson.세금) - 17500000 < 0 ? `\n(${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000)}원 이월가능)` : ""}이다.`, {
+            x: width / 2 + 55,
+            y: height / 2 - 79 - (24 * 5),
+            size: 20,
+            font: light,
+            color: rgb(1, 0, 0)
+        })
+        절약 = Number(resJson.resultJson.세금) - 17500000 < 0 ? 0 : Number(resJson.resultJson.세금) - 17500000
+    }
+    createlab.drawText(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 = `, {
         x: width / 2 + 55,
         y: height / 2 - 79 - (24 * 7),
         size: 20,
@@ -294,8 +314,8 @@ async function modifyPdf(resJson, id) {
         color: rgb(0, 0, 0)
     })
 
-    createlab.drawText(` ${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)))}원을 절약 가능`, {
-        x: width / 2 + 55 + light.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(Math.floor(resJson.resultJson.당기순이익 * 0.07))}원 =  `, 20),
+    createlab.drawText(` ${addCommasToNumber((resJson.resultJson.세금 - 절약))}원을 절약 가능`, {
+        x: width / 2 + 55 + light.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 =  `, 20),
         y: height / 2 - 79 - (24 * 7),
         size: 20,
         font: light,
@@ -303,7 +323,7 @@ async function modifyPdf(resJson, id) {
     })
 
     createlab.drawText(`하다.`, {
-        x: width / 2 + 55 + light.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(Math.floor(resJson.resultJson.당기순이익 * 0.07))}원 =  ` + ` ${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)))}원을 절약 가능`, 20),
+        x: width / 2 + 55 + light.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 =  ` + ` ${addCommasToNumber((resJson.resultJson.세금 - 절약))}원을 절약 가능`, 20),
         y: height / 2 - 79 - (24 * 7),
         size: 20,
         font: light,
@@ -496,8 +516,8 @@ async function modifyPdf(resJson, id) {
     })
     let 이월 = Number(resJson.resultJson.세금) - 17500000 < 0 ? Number(resJson.resultJson.세금) - 17500000 : 0
     //세금혜택 - 연구소설립
-    final.drawText(addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)), {
-        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)), 22) / 2) + 173.5,
+    final.drawText(addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월)), {
+        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월)), 22) / 2) + 173.5,
         y: height / 2 + 84 - (57 * 2),
         size: 22,
         font: def,
@@ -505,8 +525,8 @@ async function modifyPdf(resJson, id) {
     })
 
     //세금혜택 - 혜택합계
-    final.drawText(addCommasToNumber((((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), {
-        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), 22) / 2) + (173.5 * 3),
+    final.drawText(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), {
+        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), 22) / 2) + (173.5 * 3),
         y: height / 2 + 84 - (57 * 2),
         size: 22,
         font: def,
@@ -579,7 +599,7 @@ async function modifyPdf(resJson, id) {
         color: rgb(128 / 255, 0, 128 / 255)
     })
 
-    final.drawText(`${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월))}원 추가 감면`, {
+    final.drawText(`${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월))}원 추가 감면`, {
         x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`세금납부 금액은 `, 22),
         y: height / 2 - 264.5 + 7 + 9 - 1 - 28 - 28,
         size: 22,
@@ -588,7 +608,7 @@ async function modifyPdf(resJson, id) {
     })
 
     final.drawText(`됩니다.`, {
-        x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`세금납부 금액은 ` + `${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - Math.floor(resJson.resultJson.당기순이익 * 0.07)) + Math.abs(이월))}원 추가 감면`, 22),
+        x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`세금납부 금액은 ` + `${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월))}원 추가 감면`, 22),
         y: height / 2 - 264.5 + 7 + 9 - 1 - 28 - 28,
         size: 22,
         font: light,
@@ -780,7 +800,7 @@ async function analysisData(path) {
 
         let 과세계산 = 과세표준계산(Number(당기순이익[0].replace(/,/gi, "")), 법인);
         let 세금 = Number(당기순이익[0].replace(/,/gi, "")) * (과세계산.세율 / 100) - 과세계산.누진세액공제;
-        if(Number(당기순이익[0].replace(/,/gi, "")) > 200000000) 세금 = (Number(당기순이익[0].replace(/,/gi, "")) * 0.09) + (Number(당기순이익[0].replace(/,/gi, ""))-200000000) * (과세계산.세율 / 100) - 과세계산.누진세액공제
+        if(Number(당기순이익[0].replace(/,/gi, "")) > 200000000) 세금 = (200000000 * 0.09) + (Number(당기순이익[0].replace(/,/gi, ""))-200000000) * (과세계산.세율 / 100) - 과세계산.누진세액공제
 
         let 자본총액 = Number(당기순이익[0].replace(/,/gi, "")) + Number(자본금[0].replace(/,/gi, ""));
 
