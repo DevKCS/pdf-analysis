@@ -45,9 +45,9 @@ async function modifyPdf(resJson, id) {
     let 예상대출 = Math.floor(resJson.resultJson.매출액 * 0.5) > 1000000000 ? 1000000000 : Math.floor(resJson.resultJson.매출액 * 0.5)
     const pdfDoc = await PDFDocument.load(fs.readFileSync('./최종본V2.pdf').buffer)
     pdfDoc.registerFontkit(fontkit);
-    const def = await pdfDoc.embedFont(fs.readFileSync("./fonts/DX명조 30.ttf"))
-    const light = await pdfDoc.embedFont(fs.readFileSync("./fonts/DX명조 30.ttf"))
-    const bold = await pdfDoc.embedFont(fs.readFileSync("./fonts/DX명조 30.ttf"))
+    const def = await pdfDoc.embedFont(fs.readFileSync("./fonts/Pretendard-Regular.ttf"))
+    const light = await pdfDoc.embedFont(fs.readFileSync("./fonts/Pretendard-SemiBold.ttf"))
+    const bold = await pdfDoc.embedFont(fs.readFileSync("./fonts/Pretendard-Bold.ttf"))
 
     const pages = pdfDoc.getPages()
     const main = pages[0]
