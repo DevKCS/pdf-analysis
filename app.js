@@ -526,6 +526,15 @@ async function modifyPdf(resJson, id) {
         color: rgb(0, 0, 0)
     })
 
+    //정책자금이자 - 당초
+    final.drawText("6.0%", {
+        x: width / 2 + 11.5 - (def.widthOfTextAtSize("6.0%", 22) / 2),
+        y: height / 2 + 84 - (57 * 1) - 3,
+        size: 22,
+        font: bold,
+        color: rgb(0, 0, 0)
+    })
+
 
     //세금혜택 - 이름
     final.drawText("1년 세금 혜택", {
