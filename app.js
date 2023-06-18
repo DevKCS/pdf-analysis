@@ -11,7 +11,6 @@ async function analyzePDF(buffer) {
         const data = await PDFParser(buffer);
         const pdfText = data.text;
         const tableData = extractTableData(pdfText);
-        console.log('JSON 파일이 성공적으로 저장되었습니다.');
         return tableData; // 데이터 출력
     } catch (err) {
         console.error(err);
@@ -46,9 +45,9 @@ async function modifyPdf(resJson, id) {
     let 예상대출 = Math.floor(resJson.resultJson.매출액 * 0.5) > 1000000000 ? 1000000000 : Math.floor(resJson.resultJson.매출액 * 0.5)
     const pdfDoc = await PDFDocument.load(fs.readFileSync('./최종본V2.pdf').buffer)
     pdfDoc.registerFontkit(fontkit);
-    const def = await pdfDoc.embedFont(fs.readFileSync("./fonts/Pretendard-Regular.ttf"))
-    const light = await pdfDoc.embedFont(fs.readFileSync("./fonts/Pretendard-SemiBold.ttf"))
-    const bold = await pdfDoc.embedFont(fs.readFileSync("./fonts/Pretendard-Bold.ttf"))
+    const def = await pdfDoc.embedFont(fs.readFileSync("./fonts/DX명조 30.ttf"))
+    const light = await pdfDoc.embedFont(fs.readFileSync("./fonts/DX명조 30.ttf"))
+    const bold = await pdfDoc.embedFont(fs.readFileSync("./fonts/DX명조 30.ttf"))
 
     const pages = pdfDoc.getPages()
     const main = pages[0]
@@ -294,7 +293,23 @@ async function modifyPdf(resJson, id) {
             font: light,
             color: rgb(0, 0, 0)
         })
-    } else if(Number(resJson.resultJson.세금) - 17500000 < Math.floor(resJson.resultJson.당기순이익 * 0.07)) {
+
+        createlab.drawText(` ${addCommasToNumber((resJson.resultJson.세금 - 절약))}원을 절약 가능`, {
+            x: width / 2 + 55 + light.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 =  `, 20),
+            y: height / 2 - 79 - (24 * 7),
+            size: 20,
+            font: light,
+            color: rgb(1, 0, 0)
+        })
+        createlab.drawText(`하다.`, {
+            x: width / 2 + 55,
+            y: height / 2 - 79 - (24 * 8),
+            size: 20,
+            font: light,
+            color: rgb(0, 0, 0)
+        })
+    
+    } else {
         let createlaboratorySim = `'1명'의 연구원 임금을 각 1년 '35,000,000원으로 책정했을 경우\n35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 공제 된다.`
         createlab.drawText(splitText(createlaboratorySim, 51), {
             x: width / 2 + 55,
@@ -304,7 +319,7 @@ async function modifyPdf(resJson, id) {
             color: rgb(0, 0, 0)
         })
 
-        createlab.drawText(`당사의 최종 납부 세금은 ${addCommasToNumber(resJson.resultJson.세금)}원 - 17,500,000원 = ${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000 < 0 ? 0 : Number(resJson.resultJson.세금) - 17500000)}원${Number(resJson.resultJson.세금) - 17500000 < 0 ? `\n(${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000)}원 이월가능)` : ""}이다.`, {
+        createlab.drawText(splitText(`당사의 최종 납부 세금은 ${addCommasToNumber(resJson.resultJson.세금)}원 - 17,500,000원 = ${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000 < 0 ? 0 : Number(resJson.resultJson.세금) - 17500000)}원${Number(resJson.resultJson.세금) - 17500000 < 0 ? `\n(${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000)}원 이월가능)` : ""}이다.`), {
             x: width / 2 + 55,
             y: height / 2 - 79 - (24 * 3),
             size: 20,
@@ -319,23 +334,23 @@ async function modifyPdf(resJson, id) {
             font: light,
             color: rgb(0, 0, 0)
         })
+
+        createlab.drawText(` ${addCommasToNumber((resJson.resultJson.세금 - 절약))}원을 절약 가능`, {
+            x: width / 2 + 55 + light.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 =  `, 20),
+            y: height / 2 - 79 - (24 * 5),
+            size: 20,
+            font: light,
+            color: rgb(1, 0, 0)
+        })
+        createlab.drawText(`하다.`, {
+            x: width / 2 + 55,
+            y: height / 2 - 79 - (24 * 6),
+            size: 20,
+            font: light,
+            color: rgb(0, 0, 0)
+        })
+    
     }
-
-    createlab.drawText(` ${addCommasToNumber((resJson.resultJson.세금 - 절약))}원을 절약 가능`, {
-        x: width / 2 + 55 + light.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 =  `, 20),
-        y: height / 2 - 79 - (24 * 7),
-        size: 20,
-        font: light,
-        color: rgb(1, 0, 0)
-    })
-
-    createlab.drawText(`하다.`, {
-        x: width / 2 + 55 + light.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 =  ` + ` ${addCommasToNumber((resJson.resultJson.세금 - 절약))}원을 절약 가능`, 20),
-        y: height / 2 - 79 - (24 * 7),
-        size: 20,
-        font: light,
-        color: rgb(0, 0, 0)
-    })
 
     //AI 추천 컨설팅 [3]
     let 벤처 = `당사의 추정 납부 세금은 ${addCommasToNumber(resJson.resultJson.세금)}원이라고 가정한다.`
@@ -796,7 +811,7 @@ async function analysisData(path) {
         const 매출액 = extractValuesWithSubstring(tableData, '매출액');
 
         const 장기차입금 = extractValuesWithSubstring(tableData, '장기차입금');
-
+        if(장기차입금.length == 0) 장기차입금.push("0")
         let 당기순이익 = extractValuesWithSubstring(tableData, '당기순이익');
         if (당기순이익.length == 0) {
             당기순이익 = extractValuesWithSubstring(tableData, '당기순손익');
@@ -849,7 +864,9 @@ async function analysisData(path) {
             AI: "",
             resultJson: resultJson
         }
-    });
+    }).catch((e) => {
+        data = false
+    })
     return data;
 }
 
@@ -862,6 +879,7 @@ import expressSession from "express-session";
 import serveStatic from "serve-static";
 import http from "http";
 import ejs from "ejs";
+import { table } from 'console';
 const app = express();
 app.use(cors());
 const storage = multer.memoryStorage();
@@ -895,7 +913,8 @@ app.post('/upload', upload.array('pdf', 2), async (req, res) => {
             let a = (await analysisData(fileBuffer))
             data.push(a)
         }
-        res.status(200).json(data);
+        if(data[0] == false) res.status(500).send("error")
+        else res.status(200).json(data);
     } catch (e) {
         res.status(500);
     }
