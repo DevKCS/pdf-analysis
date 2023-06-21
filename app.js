@@ -509,8 +509,8 @@ async function modifyPdf(resJson, id) {
     })
 
     //정책자금 이자 - 혜택합계
-    final.drawText(addCommasToNumber(Math.floor(예상대출 * 0.015)), {
-        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber(Math.floor(예상대출 * 0.015)), 22) / 2) + (173.5 * 3),
+    final.drawText(addCommasToNumber(Math.floor(예상대출 * 0.02)), {
+        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber(Math.floor(예상대출 * 0.02)), 22) / 2) + (173.5 * 3),
         y: height / 2 + 84 - 57,
         size: 22,
         font: def,
@@ -564,8 +564,8 @@ async function modifyPdf(resJson, id) {
     })
 
     //세금혜택 - 혜택합계
-    final.drawText(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), {
-        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5)) - resJson.resultJson.세금), 22) / 2) + (173.5 * 3),
+    final.drawText(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5))), {
+        x: width / 2 + 11.5 - (def.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5))), 22) / 2) + (173.5 * 3),
         y: height / 2 + 84 - (57 * 2),
         size: 22,
         font: def,
@@ -613,7 +613,7 @@ async function modifyPdf(resJson, id) {
         color: rgb(128 / 255, 0, 128 / 255)
     })
 
-    final.drawText(`최소 ${addCommasToNumber(Math.floor(예상대출 * 0.014))}원 감소`, {
+    final.drawText(`최소 ${addCommasToNumber(Math.floor(예상대출 * 0.02))}원 감소`, {
         x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`정책자금 이자는 `, 22),
         y: height / 2 - 264.5 + 7 + 9 - 1 - 28,
         size: 22,
@@ -622,7 +622,7 @@ async function modifyPdf(resJson, id) {
     })
 
     final.drawText(`됩니다.`, {
-        x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`정책자금 이자는 ` + `최소 ${addCommasToNumber(Math.floor(예상대출 * 0.014))}원 감소`, 22),
+        x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`정책자금 이자는 ` + `최소 ${addCommasToNumber(Math.floor(예상대출 * 0.02))}원 감소`, 22),
         y: height / 2 - 264.5 + 7 + 9 - 1 - 28,
         size: 22,
         font: light,
@@ -637,22 +637,39 @@ async function modifyPdf(resJson, id) {
         font: light,
         color: rgb(128 / 255, 0, 128 / 255)
     })
+    if(Number(resJson.resultJson.세금) - 17500000 < 0) {
+        final.drawText(`${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월))}원 추가 감면`, {
+            x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`세금납부 금액은 `, 22),
+            y: height / 2 - 264.5 + 7 + 9 - 1 - 28 - 28,
+            size: 22,
+            font: light,
+            color: rgb(1, 0, 0)
+        })
+    
+        final.drawText(`됩니다.`, {
+            x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`세금납부 금액은 ` + `${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월))}원 추가 감면`, 22),
+            y: height / 2 - 264.5 + 7 + 9 - 1 - 28 - 28,
+            size: 22,
+            font: light,
+            color: rgb(0, 0, 0)
+        })
+    } else {
+        final.drawText(`${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소`, {
+            x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`세금납부 금액은 `, 22),
+            y: height / 2 - 264.5 + 7 + 9 - 1 - 28 - 28,
+            size: 22,
+            font: light,
+            color: rgb(1, 0, 0)
+        })
 
-    final.drawText(`${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월))}원 추가 감면`, {
-        x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`세금납부 금액은 `, 22),
-        y: height / 2 - 264.5 + 7 + 9 - 1 - 28 - 28,
-        size: 22,
-        font: light,
-        color: rgb(1, 0, 0)
-    })
-
-    final.drawText(`됩니다.`, {
-        x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`세금납부 금액은 ` + `${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월))}원 추가 감면`, 22),
-        y: height / 2 - 264.5 + 7 + 9 - 1 - 28 - 28,
-        size: 22,
-        font: light,
-        color: rgb(0, 0, 0)
-    })
+        final.drawText(`됩니다.`, {
+            x: width / 2 + -245 - 7 + 1 + light.widthOfTextAtSize(`세금납부 금액은 ` + `${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소`, 22),
+            y: height / 2 - 264.5 + 7 + 9 - 1 - 28 - 28,
+            size: 22,
+            font: light,
+            color: rgb(0, 0, 0)
+        })
+    }
     const pdfBytes = await pdfDoc.save()
     fs.writeFileSync('data/' + id + '.pdf', pdfBytes)
     return true
