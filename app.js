@@ -620,8 +620,8 @@ async function modifyPdf(resJson, id) {
 
     //세금혜택 - 당초
     final.drawText(addCommasToNumber(resJson.resultJson.세금), {
-        x: width / 2 - (bold.widthOfTextAtSize(addCommasToNumber(resJson.resultJson.세금), 44) / 2) - 544,
-        y: height / 2 - 70,
+        x: width / 2 - (bold.widthOfTextAtSize(addCommasToNumber(resJson.resultJson.세금), 44) / 2) - 544 -5,
+        y: height / 2 - 70 + 5,
         size: 44,
         font: bold,
         color: rgb(0, 0, 0)
@@ -630,8 +630,8 @@ async function modifyPdf(resJson, id) {
 
     //세금혜택 - 연구소설립
     final.drawText(addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월)), {
-        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월)), 44) / 2) - 544 + 390,
-        y: height / 2 - 70,
+        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월)), 44) / 2) - 544 + 390 -5,
+        y: height / 2 - 70 + 5,
         size: 44,
         font: bold,
         color: rgb(0, 0, 0)
@@ -639,8 +639,8 @@ async function modifyPdf(resJson, id) {
 
     //세금혜택 - 혜택합계
     final.drawText(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5))), {
-        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5))), 44) / 2) - 544 + 390 + 390 + 390,
-        y: height / 2 - 70,
+        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5))), 44) / 2) - 544 + 390 + 390 + 390 -5,
+        y: height / 2 - 70 + 5,
         size: 44,
         font: bold,
         color: rgb(0, 0, 0)
@@ -648,8 +648,43 @@ async function modifyPdf(resJson, id) {
 
     //세금혜택 - 기업인증
     final.drawText(addCommasToNumber(Math.floor(resJson.resultJson.세금 * 0.5)), {
-        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber(Math.floor(resJson.resultJson.세금 * 0.5)), 44) / 2) - 544 + 390 + 380,
-        y: height / 2 - 70,
+        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber(Math.floor(resJson.resultJson.세금 * 0.5)), 44) / 2) - 544 + 390 + 380 -5,
+        y: height / 2 - 70 + 5,
+        size: 44,
+        font: bold,
+        color: rgb(0, 0, 0)
+    })//세금혜택 - 당초
+    final.drawText(addCommasToNumber(resJson.resultJson.세금), {
+        x: width / 2 - (bold.widthOfTextAtSize(addCommasToNumber(resJson.resultJson.세금), 44) / 2) - 544 -5,
+        y: height / 2 - 70 + 5,
+        size: 44,
+        font: bold,
+        color: rgb(0, 0, 0)
+    })
+    let 이월 = Number(resJson.resultJson.세금) - 17500000 < 0 ? Number(resJson.resultJson.세금) - 17500000 : 0
+
+    //세금혜택 - 연구소설립
+    final.drawText(addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월)), {
+        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월)), 44) / 2) - 544 + 390 -5,
+        y: height / 2 - 70 + 5,
+        size: 44,
+        font: bold,
+        color: rgb(0, 0, 0)
+    })
+
+    //세금혜택 - 혜택합계
+    final.drawText(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5))), {
+        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5))), 44) / 2) - 544 + 390 + 390 + 390 -5,
+        y: height / 2 - 70 + 5,
+        size: 44,
+        font: bold,
+        color: rgb(0, 0, 0)
+    })
+
+    //세금혜택 - 기업인증
+    final.drawText(addCommasToNumber(Math.floor(resJson.resultJson.세금 * 0.5)), {
+        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber(Math.floor(resJson.resultJson.세금 * 0.5)), 44) / 2) - 544 + 390 + 380 -5,
+        y: height / 2 - 70 + 5,
         size: 44,
         font: bold,
         color: rgb(0, 0, 0)
