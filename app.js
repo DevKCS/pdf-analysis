@@ -71,23 +71,35 @@ function 대출2(업태,매출) {
     }
 }
 
+function 대출3(업태,매출) {
+    if(업태.includes("도매") || 업태.includes("소매")) {
+        return 매출*0.40
+    }
+    if(업태.includes("제조") || 업태.includes("정보")) {
+        return 매출*0.65
+    }
+    if(업태.includes("서비스")) {
+        return 매출*0.35
+    }
+    if(업태.includes("건설")) {
+        return 매출*0.35
+    }
+}
+
 async function modifyPdf(resJson, id) {
     let 예상대출 = Math.floor(대출(resJson.resultJson.업태,resJson.resultJson.매출액)) > 1000000000 ? 1000000000 : Math.floor(대출(resJson.resultJson.업태,resJson.resultJson.매출액))
     const pdfDoc = await PDFDocument.load(fs.readFileSync('./보고서-빈칸 (1).pdf').buffer)
     pdfDoc.registerFontkit(fontkit);
-    const def = await pdfDoc.embedFont(fs.readFileSync("./fonts/NanumGothic.ttf"))
     const light = await pdfDoc.embedFont(fs.readFileSync("./fonts/NanumGothicLight.ttf"))
     const bold = await pdfDoc.embedFont(fs.readFileSync("./fonts/NanumGothicBold.ttf"))
 
     const pages = pdfDoc.getPages()
-    const main = pages[0]
     const airesult1 = pages[1]
     const airesult2 = pages[2]
     const createlab = pages[3]
     const airesult3 = pages[5]
     const final = pages[7]
     const { width, height } = airesult1.getSize()
-    console.log(airesult1.getSize())
 
     //1p 왼쪽 표 x좌표 공식 x: width / 2 - bold.widthOfTextAtSize(addCommasToNumber(resJson.resultJson.당기순이익), 24) - 105
     //1p 왼쪽 표 y좌표 공식 y: height / 2 + 122 - (60.5 * n)
@@ -240,6 +252,27 @@ async function modifyPdf(resJson, id) {
         font: bold,
         color: rgb(0, 0, 0)
     })
+    airesult2.drawText(`연구소, 각종 인증 등을 할 경우 상승시킬 수 있는 최대 정책자금 한도는`, {
+        x: width / 2 - 30,
+        y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 200 - 50 - 33 - 5 - 5 - 33 - 5 - 5,
+        size: 33,
+        font: bold,
+        color: rgb(0, 0, 0)
+    })
+    airesult2.drawText(addCommasToNumber(Math.floor(대출3(resJson.resultJson.업태,resJson.resultJson.매출액)))+"원이다.", {
+        x: width / 2 - 30 ,
+        y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 200 - 50 - 33 - 5 - 5 - 33 - 5 - 5 - 33 - 5 - 5,
+        size: 33,
+        font: bold,
+        color: rgb(0, 0, 0)
+    })
+    airesult2.drawText("1회 최대 대출 한도 금액은 "+addCommasToNumber(Math.floor(Number(max대출.replaceAll(",",""))*1.25))+"원이다.", {
+        x: width / 2 - 30 ,
+        y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 200 - 50 - 33 - 5 - 5 - 33 - 5 - 5 - 33 - 5 - 5 - 33 - 5 - 5,
+        size: 33,
+        font: bold,
+        color: rgb(0, 0, 0)
+    })
     //연구소설립효과
     let 절약
     let createlaboratory = ''
@@ -337,7 +370,7 @@ async function modifyPdf(resJson, id) {
                 color: rgb(0, 0, 0)
             })
         } else {
-            let createlaboratorySim = `'1명'의 연구원 임금을 각 1년 '35,000,000원으로 책정했을 경우\n\n35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 공제 된다.\n당사의 최종 납부 세금은 \n${addCommasToNumber(resJson.resultJson.세금)}원 - 17,500,000원 = ${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000 < 0 ? 0 : Number(resJson.resultJson.세금) - 17500000)}원${Number(resJson.resultJson.세금) - 17500000 < 0 ? `\n(${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000)}원 이월가능)` : ""}이다.\n하지만, 최저한세로 인해 ${addCommasToNumber(resJson.resultJson.당기순이익)}원 x 7% = `
+            let createlaboratorySim = `'1명'의 연구원 임금을 각 1년 '35,000,000원으로 책정했을 경우\n\n35,000,000원 x 2명 x 25% = 17,500,000원의 세액이 공제 된다.\n\n당사의 최종 납부 세금은 \n\n${addCommasToNumber(resJson.resultJson.세금)}원 - 17,500,000원 = ${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000 < 0 ? 0 : Number(resJson.resultJson.세금) - 17500000)}원${Number(resJson.resultJson.세금) - 17500000 < 0 ? `\n\n(${addCommasToNumber(Number(resJson.resultJson.세금) - 17500000)}원 이월가능)` : ""}이다.\n\n하지만, 최저한세로 인해 ${addCommasToNumber(resJson.resultJson.당기순이익)}원 x 7% = `
             createlab.drawText(splitText(createlaboratorySim, 51), {
                 x: width / 2 + 45,
                 y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250,
