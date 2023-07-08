@@ -601,7 +601,7 @@ async function modifyPdf(resJson, id) {
 
     //정책자금 한도 - 혜택합계
     final.drawText(addCommasToNumber((Math.floor(예상대출 * 1.2) - 예상대출) + (Math.floor(예상대출 * 1.25) - 예상대출)), {
-        x: width / 2 - (bold.widthOfTextAtSize(addCommasToNumber(Math.floor(예상대출 * 1.25)), 44) / 2) - 544 + 390 + 390 + 390 + 30,
+        x: width / 2 - (bold.widthOfTextAtSize(addCommasToNumber((Math.floor(예상대출 * 1.2) - 예상대출) + (Math.floor(예상대출 * 1.25) - 예상대출)), 44) / 2) - 544 + 390 + 390 + 390,
         y: height / 2 + 200,
         size: 44,
         font: bold,
@@ -619,41 +619,6 @@ async function modifyPdf(resJson, id) {
 
 
     //세금혜택 - 당초
-    final.drawText(addCommasToNumber(resJson.resultJson.세금), {
-        x: width / 2 - (bold.widthOfTextAtSize(addCommasToNumber(resJson.resultJson.세금), 44) / 2) - 544 -5,
-        y: height / 2 - 70 + 5,
-        size: 44,
-        font: bold,
-        color: rgb(0, 0, 0)
-    })
-    let 이월 = Number(resJson.resultJson.세금) - 17500000 < 0 ? Number(resJson.resultJson.세금) - 17500000 : 0
-
-    //세금혜택 - 연구소설립
-    final.drawText(addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월)), {
-        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월)), 44) / 2) - 544 + 390 -5,
-        y: height / 2 - 70 + 5,
-        size: 44,
-        font: bold,
-        color: rgb(0, 0, 0)
-    })
-
-    //세금혜택 - 혜택합계
-    final.drawText(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5))), {
-        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber((((resJson.resultJson.세금 - 절약) + Math.abs(이월)) + Math.floor(resJson.resultJson.세금 * 0.5))), 44) / 2) - 544 + 390 + 390 + 390 -5,
-        y: height / 2 - 70 + 5,
-        size: 44,
-        font: bold,
-        color: rgb(0, 0, 0)
-    })
-
-    //세금혜택 - 기업인증
-    final.drawText(addCommasToNumber(Math.floor(resJson.resultJson.세금 * 0.5)), {
-        x: width / 2 + 11.5 - (bold.widthOfTextAtSize(addCommasToNumber(Math.floor(resJson.resultJson.세금 * 0.5)), 44) / 2) - 544 + 390 + 380 -5,
-        y: height / 2 - 70 + 5,
-        size: 44,
-        font: bold,
-        color: rgb(0, 0, 0)
-    })//세금혜택 - 당초
     final.drawText(addCommasToNumber(resJson.resultJson.세금), {
         x: width / 2 - (bold.widthOfTextAtSize(addCommasToNumber(resJson.resultJson.세금), 44) / 2) - 544 -5,
         y: height / 2 - 70 + 5,
@@ -728,7 +693,8 @@ async function modifyPdf(resJson, id) {
 
     //세금납부
     if (Number(resJson.resultJson.세금) - 17500000 < 0) {
-        final.drawText(`${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월))}원 추가 감면`, {
+        let rd = Number(resJson.resultJson.세금) - 17500000 < Math.floor(resJson.resultJson.당기순이익 * 0.07) ? Math.floor(resJson.resultJson.당기순이익 * 0.07) : resJson.resultJson.세금 - 절약
+        final.drawText(`${addCommasToNumber((rd))}원 감소되며, 내년에 ${addCommasToNumber((resJson.resultJson.세금 - 절약) + Math.abs(이월))}원 추가 감면`, {
             x: width / 2 - 845 + 7.5 + 55.5,
             y: height / 2 - 264 - 46.5 - 77 - 74,
             size: 44,
@@ -744,7 +710,8 @@ async function modifyPdf(resJson, id) {
             color: rgb(0, 0, 0)
         })
     } else {
-        final.drawText(`${addCommasToNumber((resJson.resultJson.세금 - 절약))}원 감소`, {
+        let rd = Number(resJson.resultJson.세금) - 17500000 < Math.floor(resJson.resultJson.당기순이익 * 0.07) ? Math.floor(resJson.resultJson.당기순이익 * 0.07) : resJson.resultJson.세금 - 절약
+        final.drawText(`${addCommasToNumber(rd)}원 감소`, {
             x: width / 2 - 845 + 7.5 + 55.5,
             y: height / 2 - 264 - 46.5 - 77 - 74,
             size: 44,
@@ -1005,23 +972,6 @@ app.post('/upload', upload.array('pdf', 2), async (req, res) => {
         res.status(500);
     }
 });
-app.post('/compare', async (req, res) => {
-    let {
-        pdf1,
-        pdf2
-    } = req.body
-    let question = ""
-    question += "아래의 재무제표를 요약한 두개의 데이터를 확인하고 재무제표평가적으로 비교해서 분석해줘\n1번 데이터\n" + pdf1
-    question += "\n\n2번 데이터\n" + pdf2
-    let q = new wrtn()
-    await q.loginByEmail("39siw7sm29@naver.com", "39siw7sm29!")
-    let roomId = await q.addRoom()
-    let answer = await q.ask(question, 'GPT3.5', roomId)
-    await q.removeRoom(roomId)
-    res.status(200).json({
-        "result": answer
-    });
-})
 app.get('/', (req, res) => {
     res.render('main', {
         user: req.session.login
@@ -1060,3 +1010,5 @@ app.get('/login', async (req, res) => {
 app.listen(3000, () => {
     console.log('서버가 3000번 포트에서 실행 중입니다.');
 });
+
+
