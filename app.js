@@ -389,7 +389,7 @@ async function modifyPdf(resJson, id) {
 
             createlab.drawText(`최종납부`, {
                 x: width / 2 + 45,
-                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*6),
+                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (39*6),
                 size: 33,
                 font: bold,
                 color: rgb(1, 0, 0)
@@ -397,7 +397,7 @@ async function modifyPdf(resJson, id) {
 
             createlab.drawText(`하게된다.`, {
                 x: width / 2 + 45 + bold.widthOfTextAtSize('최종납부', 33),
-                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*6),
+                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (39*6),
                 size: 33,
                 font: bold,
                 color: rgb(0, 0, 0)
@@ -405,22 +405,22 @@ async function modifyPdf(resJson, id) {
             절약 = Math.floor(resJson.resultJson.당기순이익 * 0.07)
             createlab.drawText(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 = `, {
                 x: width / 2 + 45,
-                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*7),
+                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (39*7) - 9,
                 size: 33,
                 font: bold,
                 color: rgb(0, 0, 0)
             })
 
-            createlab.drawText(` ${addCommasToNumber((resJson.resultJson.세금 - 절약))}원을 절약 가능`, {
-                x: width / 2 + 45 + bold.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 =  `, 33),
-                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*7),
+            createlab.drawText(`${addCommasToNumber((resJson.resultJson.세금 - 절약))}원을 절약 가능`, {
+                x: width / 2 + 45 + bold.widthOfTextAtSize(`즉, 당초 ${addCommasToNumber(resJson.resultJson.세금)}원 - ${addCommasToNumber(절약)}원 = `, 33),
+                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (39*7) - 9,
                 size: 33,
                 font: bold,
                 color: rgb(1, 0, 0)
             })
             createlab.drawText(`하다.`, {
                 x: width / 2 + 45,
-                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*8),
+                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (39*8) - 9.3,
                 size: 33,
                 font: bold,
                 color: rgb(0, 0, 0)
