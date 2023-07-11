@@ -381,7 +381,7 @@ async function modifyPdf(resJson, id) {
 
             createlab.drawText(`${addCommasToNumber(Math.floor(resJson.resultJson.당기순이익 * 0.07))}원을`, {
                 x: width / 2 + 45 + bold.widthOfTextAtSize(`하지만, 최저한세로 인해 ${addCommasToNumber(resJson.resultJson.당기순이익)}원 x 7% = `, 33),
-                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*4),
+                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*5),
                 size: 33,
                 font: bold,
                 color: rgb(1, 0, 0)
@@ -389,7 +389,7 @@ async function modifyPdf(resJson, id) {
 
             createlab.drawText(`최종납부`, {
                 x: width / 2 + 45,
-                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*4),
+                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*6),
                 size: 33,
                 font: bold,
                 color: rgb(1, 0, 0)
@@ -397,7 +397,7 @@ async function modifyPdf(resJson, id) {
 
             createlab.drawText(`하게된다.`, {
                 x: width / 2 + 45 + bold.widthOfTextAtSize('최종납부', 33),
-                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*4),
+                y: height / 2 + 112 + 100 + 15 + 60 + 100 - 40 - 5 - 70 - 20 - 33 - 5 - 5 - 250 - (38*6),
                 size: 33,
                 font: bold,
                 color: rgb(0, 0, 0)
